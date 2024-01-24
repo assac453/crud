@@ -1,0 +1,22 @@
+version: "2.2"
+
+services:
+  postgresql:
+    image: postgres:14.8-alpine3.17
+    container_name: crud_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: "crud"
+      POSTGRES_USER: "dev"
+      POSTGRES_PASSWORD: "dev"
+      PDDATA: "/var/lib/postgresql/data/pgdata"
+    networks:
+      - crud
+volumes:
+  postgresql-data:
+networks:
+  crud:
+    driver: bridge
