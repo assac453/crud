@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,8 +16,11 @@ import java.util.stream.Collectors;
 public class EmployeeService implements CRUDService<EmployeeDto>{
 
     private final EmployeeRepository repository;
+    private final DepartmentService departmentService;
 
-
+    public List<EmployeeDto> getEmployeesWithSpecificDepartmentId(int id){
+        return departmentService.getAllEmployeeWithSpecificDepartmentId(id);
+    }
 
     @Override
     public EmployeeDto save(EmployeeDto item) {

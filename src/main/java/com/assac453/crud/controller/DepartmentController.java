@@ -1,7 +1,7 @@
 package com.assac453.crud.controller;
 
 import com.assac453.crud.dto.DepartmentDto;
-import com.assac453.crud.dto.EmployeeWithIdDepartmentDto;
+import com.assac453.crud.dto.EmployeeDto;
 import com.assac453.crud.service.DepartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +35,9 @@ public class DepartmentController {
     }
 
     @PostMapping("/employee")
-    public String addEmployeeToDepartment(@RequestBody EmployeeWithIdDepartmentDto dto){
-        return service.addToDepartment(dto);
+    public EmployeeDto addEmployeeToDepartment(
+            @RequestParam(required = true, name = "id") int id,
+            @RequestBody EmployeeDto dto){
+        return service.addToDepartment(id, dto);
     }
 }

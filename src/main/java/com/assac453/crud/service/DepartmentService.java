@@ -2,8 +2,8 @@ package com.assac453.crud.service;
 
 import com.assac453.crud.dto.DepartmentDto;
 import com.assac453.crud.dto.EmployeeDto;
-import com.assac453.crud.dto.EmployeeWithIdDepartmentDto;
 import com.assac453.crud.entity.Department;
+import com.assac453.crud.entity.Employee;
 import com.assac453.crud.repository.DepartmentRepository;
 import com.assac453.crud.util.DtoToEntityMapper;
 import com.assac453.crud.util.EntityToDtoMapper;
@@ -19,20 +19,30 @@ import java.util.stream.Collectors;
 public class DepartmentService implements CRUDService<DepartmentDto>{
 
     private final DepartmentRepository repository;
-    private final EmployeeService service;
 
+    public  List<EmployeeDto> getAllEmployeeWithSpecificDepartmentId(int id){
+        Optional<Department> byId = repository.findById(id);
+        return byId
+                .map(
+                        department ->
+                                department.getEmployees()
+                                        .stream()
+                                        .map(EntityToDtoMapper::entityToDto)
+                                        .collect(Collectors.toList())
+                ).orElse(null);
+    }
 
-    public String addToDepartment(EmployeeWithIdDepartmentDto employeeWithIdDepartmentDto){
-        int id = employeeWithIdDepartmentDto.departmentId();
+    public EmployeeDto addToDepartment(int id, EmployeeDto dto){
         Optional<Department> byId = repository.findById(id);
         if(byId.isEmpty()){
-            return "department with id " + id + " does not exist";
+            return null;
         }
         Department department = byId.get();
-        EmployeeDto employeeDto = employeeWithIdDepartmentDto.dto();
-        department.getEmployees().add(DtoToEntityMapper.dtoToEntity(employeeDto));
+        Employee e = DtoToEntityMapper.dtoToEntity(dto);
+        e.setDepartment(department);
+        department.getEmployees().add(e);
         repository.save(department);
-        return "saved";
+        return dto;
     }
 
 
@@ -74,8 +84,6 @@ public class DepartmentService implements CRUDService<DepartmentDto>{
 
     @Override
     public DepartmentDto getById(int id) {
-//        repository.findById(id).map(EntityToDtoMapper::entityToDto).re
-
         return repository
                 .findById(id)
                 .map(EntityToDtoMapper::entityToDto)

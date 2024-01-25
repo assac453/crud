@@ -29,6 +29,11 @@ public class EmployeeController {
         return service.getAll();
     }
 
+    @GetMapping("/department")
+    public List<EmployeeDto> getAllWithSpecificDepartment(@RequestParam(required = true, name = "id") int departmentId){
+        return service.getEmployeesWithSpecificDepartmentId(departmentId);
+    }
+
     @DeleteMapping("/{id}")
     public EmployeeDto deleteById(@PathVariable int id){
         return service.delete(id);
